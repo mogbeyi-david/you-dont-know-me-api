@@ -16,7 +16,7 @@ class PostController extends Controller
         if ($posts) {
             return response()->json(['status' => 'success', 'data' => $posts], 200);
         } else {
-            return response()->json(['status' => 'error', 'data' => null, 'message' => 'Poor network'], 503);
+            return response()->json(['status' => 'error', 'data' => null, 'message' => 'Service Unavailable'], 503);
         }
     }
 
@@ -28,7 +28,7 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
     }
 
     /**
