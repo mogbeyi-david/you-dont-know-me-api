@@ -15,6 +15,8 @@ class PostController extends Controller
         $posts = Post::all();
         if ($posts) {
             return response()->json(['status' => 'success', 'data' => $posts], 200);
+        } else {
+            return response()->json(['status' => 'error', 'data' => null, 'message' => 'Poor network'], 503);
         }
     }
 
