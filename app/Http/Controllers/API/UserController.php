@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Validator;
 
@@ -29,5 +30,16 @@ class UserController extends Controller
         $success['token'] = $user->createToken('MyApp')->accessToken;
         $success['name'] = $user->name;
         return response()->json(['success' => $success], 201);
+    }
+
+    public function login()
+    {
+        if (Auth::attempt(['email' => request('email'), 'password' => request('password')])) {
+            $user = Auth::user();
+            $success['token'] = $user->createToken('MyApp')->accessToken;
+            return response()->json(['success' => $success], 200);
+        } else {
+            return response()->json(['error' => 'Unauthorised'], 401);
+        }
     }
 }
