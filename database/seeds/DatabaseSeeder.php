@@ -20,9 +20,9 @@ class DatabaseSeeder extends Seeder
 
     public function postTypeSeeder()
     {
-        $postTypes = ['AUDIO', 'TEXT', 'VIDEO'];
+        $postTypes = ['AUDIO', 'TEXT', 'VIDEO', 'IMAGE'];
 
-        for ($i = 0; $i < 3; $i++) {
+        for ($i = 0; $i < 4; $i++) {
             DB::table('post_type')->insert([
                 'post_type' => $postTypes[$i]
             ]);
