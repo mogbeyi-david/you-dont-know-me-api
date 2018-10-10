@@ -13,6 +13,7 @@ class UserController extends Controller
 {
     public function register(Request $request)
     {
+        //Validate the user input
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'email' => 'required|email|unique:users',
@@ -24,12 +25,12 @@ class UserController extends Controller
             return response()->json(['error' => $validator->errors()], 401);
         }
 
-        $input = $request->all();
-        $input['password'] = Hash::make($input['password']);
-        $user = User::create($input);
-        $success['token'] = $user->createToken('MyApp')->accessToken;
-        $success['name'] = $user->name;
-        return response()->json(['success' => $success], 201);
+        $input = $request->all(); //Get all the input parameters into an array
+        $input['password'] = Hash::make($input['password']); //Hash the password and save back into array
+        $user = User::create($input); //Create the user
+        $success['token'] = $user->createToken('MyApp')->accessToken; //Generate access token
+        $success['name'] = $user->name; // Get the user name
+        return response()->json(['success' => $success], 201); //Return response to client
     }
 
     public function login()
