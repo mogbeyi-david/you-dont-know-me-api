@@ -57,11 +57,10 @@ class UserController extends Controller
             return response()->json(['status' => 'error', 'data' => $exception->getMessage()]);
         }
 
-        if ($updateUser) {
-            return response()->json(['status' => 'success', 'data' => null], 200);
-        } else {
+        if (!$updateUser) {
             return response()->json(['status' => 'failure', 'data' => $updateUser->error], 404);
         }
+        return response()->json(['status' => 'success', 'data' => null], 200);
     }
 
 
