@@ -24,6 +24,7 @@ Route::group(['namespace' => 'API'], function () {
 
 Route::group(['namespace' => 'API', 'prefix' => 'users'], function () {
     Route::post('{id}', 'UserController@update');
+    Route::get('', 'UserController@getAll');
 });
 
 Route::group(['namespace' => 'API', 'prefix' => 'posts'], function () {

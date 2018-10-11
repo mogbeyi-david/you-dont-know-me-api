@@ -58,10 +58,27 @@ class UserController extends Controller
         }
 
         if (!$updateUser) {
-            return response()->json(['status' => 'failure', 'data' => $updateUser->error], 404);
+            return response()->json(['status' => 'failure', 'data' => "Information could not be updated"], 400);
         }
         return response()->json(['status' => 'success', 'data' => null], 200);
     }
+
+    public function getAll()
+    {
+        try {
+            $users = User::all();
+        } catch (QueryException $exception) {
+            return response()->json(['status' => 'error', 'data' => $exception->getMessage()]);
+        }
+
+        if(!$users){
+            return response()->json(['status' => 'failure', 'data' => "Data could not be fetched at this time"], 503);
+        }
+
+        return response()->json(['status' => 'success', 'data' => $users], 200);
+    }
+
+
 
 
 }
