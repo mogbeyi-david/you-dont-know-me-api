@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
@@ -43,4 +44,52 @@ class UserController extends Controller
             return response()->json(['error' => 'Unauthorised'], 401);
         }
     }
+
+    public function update(Request $request, $id)
+    {
+        try {
+            $updateUser = User::where('id', $id)->update([
+                'name' => $request['name'],
+                'email' => $request['email'],
+                'password' => Hash::make($request['password'])
+            ]);
+        } catch (QueryException $exception) {
+            return response()->json(['status' => 'error', 'data' => $exception->getMessage()]);
+        }
+
+        if (!$updateUser) {
+            return response()->json(['status' => 'failure', 'data' => "Information could not be updated"], 400);
+        }
+        return response()->json(['status' => 'success', 'data' => null], 200);
+    }
+
+    public function getAll()
+    {
+        try {
+            $users = User::all();
+        } catch (QueryException $exception) {
+            return response()->json(['status' => 'error', 'data' => $exception->getMessage()]);
+        }
+
+        if (!$users) {
+            return response()->json(['status' => 'failure', 'data' => "Data could not be fetched at this time"], 503);
+        }
+
+        return response()->json(['status' => 'success', 'data' => $users], 200);
+    }
+
+    public function delete(Request $request, $id)
+    {
+        try {
+            $deleteUser = User::destroy($id);
+        } catch (QueryException $exception) {
+            return response()->json(['status' => 'error', 'data' => $exception->getMessage()]);
+        }
+        if (!$deleteUser) {
+            return response()->json(['status' => 'error', 'data' => "User not Found"], 404);
+        }
+        return response()->json(['status' => 'success', 'data' => null], 200);
+    }
+
+
 }

@@ -17,12 +17,23 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+//LOGIN AND REGISTRATION ROUTES
 Route::group(['namespace' => 'API'], function () {
     Route::post('register', 'UserController@register');
     Route::post('login', 'UserController@login');
 });
 
+//USER ROUTES
+Route::group(['namespace' => 'API', 'prefix' => 'users'], function () {
+    Route::post('update/{id}', 'UserController@update');
+    Route::get('', 'UserController@getAll');
+    Route::post('delete/{id}', 'UserController@delete');
+});
+
+//POST ROUTES
 Route::group(['namespace' => 'API', 'prefix' => 'posts'], function () {
-    Route::post('store', 'PostController@store');
-    Route::get('', 'PostController@index');
+    Route::post('store', 'PostController@store'); //Create
+    Route::get('', 'PostController@index'); // Read
+    Route::post('update/{id}', 'PostController@update'); //Update
+    Route::post('delete/{id}', 'PostController@delete'); //Delete
 });
