@@ -25,6 +25,23 @@ class PostController extends Controller
         return response()->json(['status' => 'success', 'data' => $posts], 200);
     }
 
+    public function update(Request $request, $id)
+    {
+        try {
+            $posts = Post::where('id', $id)->update([
+                'post_type_id' => $request['post_type_id'],
+                'post' => $request['post'],
+                'caption' => $request['caption']
+            ]);
+        } catch (QueryException $exception) {
+            return response()->json(['status' => 'failure', 'data' => "Posts could not be fetched at this time"], 503);
+        }
+        if (!$posts) {
+            return response()->json(['status' => 'error', 'data' => null, 'message' => 'Service Unavailable'], 404);
+        }
+        return response()->json(['status' => 'success', 'data' => $posts], 200);
+    }
+
     public function store(Request $request)
     {
         $input = $request->all();
