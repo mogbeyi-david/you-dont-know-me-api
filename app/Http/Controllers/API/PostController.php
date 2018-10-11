@@ -20,48 +20,21 @@ class PostController extends Controller
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-
+        $input = $request->all();
+        if ($input['post_type_id'] == '1') {
+            return $this->storeText($input);
+        }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Post $post
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Post $post)
+    public function storeText($data)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \App\Post $post
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Post $post)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Post $post
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Post $post)
-    {
-        //
+        $createTextPost = Post::create($data);
+        if ($createTextPost) {
+            return response()->json(['status' => 'success', 'data' => null], 201);
+        } else {
+            return response()->json(['status' => 'error', 'data' => "Service temporarily unavailable"], 503);
+        }
     }
 }

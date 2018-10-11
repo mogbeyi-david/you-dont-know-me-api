@@ -23,5 +23,6 @@ Route::group(['namespace' => 'API'], function () {
 });
 
 Route::group(['namespace' => 'API', 'prefix' => 'posts'], function () {
-   Route::get('', 'PostController@index');
+    Route::post('store', 'PostController@store');
+    Route::get('', 'PostController@index');
 });
