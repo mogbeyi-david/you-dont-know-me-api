@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
@@ -46,15 +47,20 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {
-        $updateUser = User::where('id', $id)->update([
-            'name' => $request['name'],
-            'email' => $request['email'],
-            'password' => Hash::make($request['password'])
-        ]);
+        try {
+            $updateUser = User::where('id', $id)->update([
+                'name' => $request['name'],
+                'email' => $request['email'],
+                'password' => Hash::make($request['password'])
+            ]);
+        } catch (QueryException $exception) {
+            return response()->json(['status' => 'error', 'data' => $exception->getMessage()]);
+        }
+
         if ($updateUser) {
             return response()->json(['status' => 'success', 'data' => null], 200);
         } else {
-            return response()->json(['status' => 'failure', 'data' => 'Record not found'], 404);
+            return response()->json(['status' => 'failure', 'data' => $updateUser->error], 404);
         }
     }
 

@@ -23,7 +23,7 @@ Route::group(['namespace' => 'API'], function () {
 });
 
 Route::group(['namespace' => 'API', 'prefix' => 'users'], function () {
-    Route::post('update/{id}', 'UserController@update');
+    Route::post('{id}', 'UserController@update');
 });
 
 Route::group(['namespace' => 'API', 'prefix' => 'posts'], function () {
