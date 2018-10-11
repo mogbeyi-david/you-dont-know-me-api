@@ -71,14 +71,25 @@ class UserController extends Controller
             return response()->json(['status' => 'error', 'data' => $exception->getMessage()]);
         }
 
-        if(!$users){
+        if (!$users) {
             return response()->json(['status' => 'failure', 'data' => "Data could not be fetched at this time"], 503);
         }
 
         return response()->json(['status' => 'success', 'data' => $users], 200);
     }
 
-
+    public function delete(Request $request, $id)
+    {
+        try {
+            $deleteUser = User::destroy($id);
+        } catch (QueryException $exception) {
+            return response()->json(['status' => 'error', 'data' => $exception->getMessage()]);
+        }
+        if (!$deleteUser) {
+            return response()->json(['status' => 'error', 'data' => "User not Found"], 404);
+        }
+        return response()->json(['status' => 'success', 'data' => null], 200);
+    }
 
 
 }
