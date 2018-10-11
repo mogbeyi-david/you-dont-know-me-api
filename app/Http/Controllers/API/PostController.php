@@ -75,7 +75,7 @@ class PostController extends Controller
             return response()->json(['status' => 'error', 'data' => 'please check the video format'], 400);
         } else {
             $video = $request->file('post');
-            $name = time() . $video->getClientOriginalExtension();
+            $name = time() . '.' . $video->getClientOriginalExtension();
             $destinationPath = public_path('videos');
             $video->move($destinationPath, $name);
             $postVideo = Post::create([
