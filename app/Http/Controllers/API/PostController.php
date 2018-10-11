@@ -58,6 +58,20 @@ class PostController extends Controller
         }
     }
 
+    public function delete($id)
+    {
+        try {
+            $deletePost = Post::destroy($id);
+        } catch (QueryException $exception) {
+            return response()->json(['status' => 'error', 'data' => "Service temporarily unavailable"], 503);
+        }
+
+        if (!$deletePost) {
+            return response()->json(['status' => 'error', 'data' => "Service temporarily unavailable"], 404);
+        }
+        return response()->json(['status' => 'success', 'data' => null], 200);
+    }
+
     protected function storeText($data)
     {
         $createTextPost = Post::create($data);
