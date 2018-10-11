@@ -22,6 +22,10 @@ Route::group(['namespace' => 'API'], function () {
     Route::post('login', 'UserController@login');
 });
 
+Route::group(['namespace' => 'API', 'prefix' => 'users'], function () {
+    Route::post('update/{id}', 'UserController@update');
+});
+
 Route::group(['namespace' => 'API', 'prefix' => 'posts'], function () {
     Route::post('store', 'PostController@store');
     Route::get('', 'PostController@index');

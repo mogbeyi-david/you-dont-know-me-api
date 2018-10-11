@@ -43,4 +43,20 @@ class UserController extends Controller
             return response()->json(['error' => 'Unauthorised'], 401);
         }
     }
+
+    public function update(Request $request, $id)
+    {
+        $updateUser = User::where('id', $id)->update([
+            'name' => $request['name'],
+            'email' => $request['email'],
+            'password' => Hash::make($request['password'])
+        ]);
+        if ($updateUser) {
+            return response()->json(['status' => 'success', 'data' => null], 200);
+        } else {
+            return response()->json(['status' => 'failure', 'data' => 'Record not found'], 404);
+        }
+    }
+
+
 }
