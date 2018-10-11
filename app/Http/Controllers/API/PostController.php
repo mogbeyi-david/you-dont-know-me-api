@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 
 use App\Post;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Validator;
@@ -13,12 +14,15 @@ class PostController extends Controller
 
     public function index()
     {
-        $posts = Post::all();
-        if ($posts) {
-            return response()->json(['status' => 'success', 'data' => $posts], 200);
-        } else {
+        try {
+            $posts = Post::all();
+        } catch (QueryException $exception) {
+            return response()->json(['status' => 'failure', 'data' => "Posts could not be fetched at this time"], 503);
+        }
+        if (!$posts) {
             return response()->json(['status' => 'error', 'data' => null, 'message' => 'Service Unavailable'], 503);
         }
+        return response()->json(['status' => 'success', 'data' => $posts], 200);
     }
 
     public function store(Request $request)
@@ -40,11 +44,10 @@ class PostController extends Controller
     protected function storeText($data)
     {
         $createTextPost = Post::create($data);
-        if ($createTextPost) {
-            return response()->json(['status' => 'success', 'data' => null], 201);
-        } else {
+        if (!$createTextPost) {
             return response()->json(['status' => 'error', 'data' => "Service temporarily unavailable"], 503);
         }
+        return response()->json(['status' => 'success', 'data' => null], 201);
     }
 
     protected function storeImage(Request $request)
