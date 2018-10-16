@@ -44,3 +44,5 @@ Route::group(['namespace' => 'API', 'prefix' => 'comments'], function () {
     Route::get('', 'CommentController@index'); // Read comments
     Route::post('create', 'CommentController@create'); // Create Comments
 });
+
+Route::get('home', 'API\HomeController@index');

@@ -8,5 +8,8 @@ use App\Post;
 
 class HomeController extends Controller
 {
-
+    public function index()
+    {
+        return Post::with('comments')->get();
+    }
 }
