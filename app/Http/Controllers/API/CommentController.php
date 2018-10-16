@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Comment;
+use App\Classes\Response as apiResponse;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
@@ -13,27 +14,21 @@ class CommentController extends Controller
     {
         try {
             $comments = Comment::all();
+            return apiResponse::success(201, $comments);
         } catch (QueryException $exception) {
-            return response([
-                "status" => "error",
-                "message" => "Comments could not be fetched at this time",
-                "data" => null
-            ], 503);
+            $message = "Comments could not be fetched at this time";
+            return apiResponse::error(503, null, $message);
         }
-        return response()->json([
-            "status" => "success",
-            "data" => $comments
-        ], 201);
     }
 
     public function create(Request $request)
     {
-//        $data = $request->all();
         try {
             $comment = new Comment();
             $comment->comment = $request->comment;
             $comment->post_id = $request->post_id;
             $comment->save();
+            return apiResponse::success(201, null);
         } catch (QueryException $exception) {
             return response([
                 "status" => "error",
@@ -41,10 +36,5 @@ class CommentController extends Controller
                 "data" => null
             ], 503);
         }
-        return response()->json([
-            "status" => "success",
-            "message" => "Thank you for your comment",
-            "data" => null
-        ], 201);
     }
 }

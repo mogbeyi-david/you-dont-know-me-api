@@ -13,10 +13,10 @@ class HomeController extends Controller
     {
         try {
             $data = Post::with('comments')->get();
+            return apiResponse::success(200, $data);
         } catch (QueryException $exception) {
             $message = "Posts could not be fetched at this time";
             return apiResponse::error(null, 503, $message);
         }
-        return apiResponse::success(200, $data);
     }
 }
