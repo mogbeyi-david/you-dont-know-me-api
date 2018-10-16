@@ -42,4 +42,5 @@ Route::group(['namespace' => 'API', 'prefix' => 'posts'], function () {
 
 Route::group(['namespace' => 'API', 'prefix' => 'comments'], function () {
     Route::get('', 'CommentController@index');
+    Route::post('create', 'CommentController@create');
 });
