@@ -18,4 +18,12 @@ class Response
             "data" => $data,
         ], $statusCode);
     }
+
+    public function error($data, $statusCode)
+    {
+        return response()->json([
+            "status" => "error",
+            "data" => $data,
+        ], $statusCode);
+    }
 }
