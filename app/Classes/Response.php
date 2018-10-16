@@ -15,4 +15,9 @@ class Response
     {
         return response()->json($data, $statusCode);
     }
+
+    public function failure($data, $statusCode)
+    {
+        return response()->json($data, $statusCode);
+    }
 }
