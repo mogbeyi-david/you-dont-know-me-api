@@ -9,6 +9,7 @@ use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Validator;
+use App\Classes\Response as apiResponse;
 
 class UserController extends Controller
 {
@@ -23,7 +24,7 @@ class UserController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 401);
+            return apiResponse::error(401, $validator->errors());
         }
 
         $input = $request->all(); //Get all the input parameters into an array
@@ -31,7 +32,7 @@ class UserController extends Controller
         $user = User::create($input); //Create the user
         $success['token'] = $user->createToken('MyApp')->accessToken; //Generate access token
         $success['name'] = $user->name; // Get the user name
-        return response()->json(['success' => $success], 201); //Return response to client
+        return apiResponse::success(201, $success); //Return response to client
     }
 
     public function login()
@@ -39,56 +40,44 @@ class UserController extends Controller
         if (Auth::attempt(['email' => request('email'), 'password' => request('password')])) {
             $user = Auth::user(); // Fetch the authenticated user
             $success['token'] = $user->createToken('MyApp')->accessToken; // Generate token for user
-            return response()->json(['success' => $success], 200); // Return success response to client
+            return apiResponse::success(200, $success);  // Return success response to client
         } else {
-            return response()->json(['error' => 'Unauthorised'], 401);
+            return apiResponse::error(401, null);
         }
     }
 
     public function update(Request $request, $id)
     {
         try {
-            $updateUser = User::where('id', $id)->update([
+            User::where('id', $id)->update([
                 'name' => $request['name'],
                 'email' => $request['email'],
                 'password' => Hash::make($request['password'])
             ]);
+            return apiResponse::success(200);
         } catch (QueryException $exception) {
-            return response()->json(['status' => 'error', 'data' => $exception->getMessage()]);
+            return apiResponse::error(503, $exception->getMessage());
         }
-
-        if (!$updateUser) {
-            return response()->json(['status' => 'failure', 'data' => "Information could not be updated"], 400);
-        }
-        return response()->json(['status' => 'success', 'data' => null], 200);
     }
 
     public function getAll()
     {
         try {
             $users = User::all();
+            return apiResponse::success(200, $users);
         } catch (QueryException $exception) {
-            return response()->json(['status' => 'error', 'data' => $exception->getMessage()]);
+            return apiResponse::error(503, $exception->getMessage());
         }
-
-        if (!$users) {
-            return response()->json(['status' => 'failure', 'data' => "Data could not be fetched at this time"], 503);
-        }
-
-        return response()->json(['status' => 'success', 'data' => $users], 200);
     }
 
     public function delete(Request $request, $id)
     {
         try {
-            $deleteUser = User::destroy($id);
+            User::destroy($id);
+            return apiResponse::success(200);
         } catch (QueryException $exception) {
-            return response()->json(['status' => 'error', 'data' => $exception->getMessage()]);
+            return apiResponse::error(503, $exception->getMessage());
         }
-        if (!$deleteUser) {
-            return response()->json(['status' => 'error', 'data' => "User not Found"], 404);
-        }
-        return response()->json(['status' => 'success', 'data' => null], 200);
     }
 
 

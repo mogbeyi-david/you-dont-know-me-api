@@ -4,83 +4,37 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Comment;
+use App\Classes\Response as apiResponse;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        //
+        try {
+            $comments = Comment::all();
+            return apiResponse::success(201, $comments);
+        } catch (QueryException $exception) {
+            $message = "Comments could not be fetched at this time";
+            return apiResponse::error(503, null, $message);
+        }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function create(Request $request)
     {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Comment  $comment
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Comment $comment)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Comment  $comment
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Comment $comment)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Comment  $comment
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Comment $comment)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Comment  $comment
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Comment $comment)
-    {
-        //
+        try {
+            $comment = new Comment();
+            $comment->comment = $request->comment;
+            $comment->post_id = $request->post_id;
+            $comment->save();
+            return apiResponse::success(201, null);
+        } catch (QueryException $exception) {
+            return response([
+                "status" => "error",
+                "message" => $exception->getMessage(),
+                "data" => null
+            ], 503);
+        }
     }
 }

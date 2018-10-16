@@ -8,6 +8,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Validator;
+use App\Classes\Response as apiResponse;
 
 class PostController extends Controller
 {
@@ -16,13 +17,11 @@ class PostController extends Controller
     {
         try {
             $posts = Post::all();
+            return apiResponse::success(200, $posts);
         } catch (QueryException $exception) {
-            return response()->json(['status' => 'failure', 'data' => "Posts could not be fetched at this time"], 503);
+            $message = "Posts could not be fetched at this time";
+            return apiResponse::error("503", null, $message);
         }
-        if (!$posts) {
-            return response()->json(['status' => 'error', 'data' => null, 'message' => 'Service Unavailable'], 503);
-        }
-        return response()->json(['status' => 'success', 'data' => $posts], 200);
     }
 
     public function update(Request $request, $id)
@@ -33,13 +32,11 @@ class PostController extends Controller
                 'post' => $request['post'],
                 'caption' => $request['caption']
             ]);
+            return apiResponse::success(200, $posts);
         } catch (QueryException $exception) {
-            return response()->json(['status' => 'failure', 'data' => "Posts could not be fetched at this time"], 503);
+            $message = "Posts could not be fetched at this time";
+            return apiResponse::error(503, null, $message);
         }
-        if (!$posts) {
-            return response()->json(['status' => 'error', 'data' => null, 'message' => 'Service Unavailable'], 404);
-        }
-        return response()->json(['status' => 'success', 'data' => $posts], 200);
     }
 
     public function store(Request $request)

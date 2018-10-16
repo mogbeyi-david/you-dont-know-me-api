@@ -19,15 +19,15 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 //LOGIN AND REGISTRATION ROUTES
 Route::group(['namespace' => 'API'], function () {
-    Route::post('register', 'UserController@register');
-    Route::post('login', 'UserController@login');
+    Route::post('register', 'UserController@register'); //Create Users
+    Route::post('login', 'UserController@login'); // User Login
 });
 
 //USER ROUTES
 Route::group(['namespace' => 'API', 'prefix' => 'users'], function () {
-    Route::post('update/{id}', 'UserController@update');
-    Route::get('', 'UserController@getAll');
-    Route::post('delete/{id}', 'UserController@delete');
+    Route::post('update/{id}', 'UserController@update'); //Update
+    Route::get('', 'UserController@getAll'); // Read
+    Route::post('delete/{id}', 'UserController@delete'); //Delete
 });
 
 //POST ROUTES
@@ -37,3 +37,12 @@ Route::group(['namespace' => 'API', 'prefix' => 'posts'], function () {
     Route::post('update/{id}', 'PostController@update'); //Update
     Route::post('delete/{id}', 'PostController@delete'); //Delete
 });
+
+//COMMENT ROUTES
+
+Route::group(['namespace' => 'API', 'prefix' => 'comments'], function () {
+    Route::get('', 'CommentController@index'); // Read comments
+    Route::post('create', 'CommentController@create'); // Create Comments
+});
+
+Route::get('home', 'API\HomeController@index');
