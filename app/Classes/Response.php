@@ -11,18 +11,20 @@ namespace App\Classes;
 
 class Response
 {
-    public function success($data, $statusCode)
+    public static function success($statusCode, $data = null, $message = null)
     {
         return response()->json([
             "status" => "success",
-            "data" => $data,
+            "message" => $message,
+            "data" => $data
         ], $statusCode);
     }
 
-    public function error($data, $statusCode)
+    public static function error($statusCode, $data, $message = null)
     {
         return response()->json([
             "status" => "error",
+            "message" => $message,
             "data" => $data,
         ], $statusCode);
     }

@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\API;
 
 use Illuminate\Database\QueryException;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Post;
+use App\Classes\Response as apiResponse;
 
 class HomeController extends Controller
 {
@@ -14,15 +14,9 @@ class HomeController extends Controller
         try {
             $data = Post::with('comments')->get();
         } catch (QueryException $exception) {
-            return reponse()->json([
-                "status" => "error",
-                "message" => "Posts could not be fetched at this time",
-                "data" => null
-            ], 503);
+            $message = "Posts could not be fetched at this time";
+            return apiResponse::error(null, 503, $message);
         }
-        return response()->json([
-            "status" => "success",
-            "data" => $data
-        ]);
+        return apiResponse::success(200, $data);
     }
 }
